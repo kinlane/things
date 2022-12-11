@@ -1,0 +1,119 @@
+name: Things  
+on: [push]
+jobs:
+  deploy_source:
+    name: Deploy API Using Lambda
+    strategy:
+      matrix:
+        node-version: [12.x]
+    runs-on: ubuntu-latest
+    steps:
+    
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install and build
+        run: |
+          npm ci
+          npm run build --if-present
+        env:
+          CI: true
+
+      - name: /things get lambda deploy zip
+        uses: kinlane/things@main
+        with:
+            args: zip -qq -r m-s-things-g.zip things/get/index.js node_modules
+      - name: thing get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-west-1
+            function_name: m-s-things-g
+            zip_file: m-s-things-g.zip
+      - name: /things post lambda deploy zip
+        uses: kinlane/things@main
+        with:
+            args: zip -qq -r m-s-things-po.zip things/post/index.js node_modules
+      - name: thing get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-west-1
+            function_name: m-s-things-po
+            zip_file: m-s-things-po.zip
+      - name: /things/{thing_id} get lambda deploy zip
+        uses: kinlane/things@main
+        with:
+            args: zip -qq -r m-s-things-thing-g.zip things/thing_id/get/index.js node_modules
+      - name: thing get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-west-1
+            function_name: m-s-things-thing-g
+            zip_file: m-s-things-thing-g.zip
+      - name: /things/{thing_id} put lambda deploy zip
+        uses: kinlane/things@main
+        with:
+            args: zip -qq -r m-s-things-thing-pu.zip things/thing_id/put/index.js node_modules
+      - name: thing get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-west-1
+            function_name: m-s-things-thing-pu
+            zip_file: m-s-things-thing-pu.zip
+      - name: /things/{thing_id} delete lambda deploy zip
+        uses: kinlane/things@main
+        with:
+            args: zip -qq -r m-s-things-thing-d.zip things/thing_id/delete/index.js node_modules
+      - name: thing get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-west-1
+            function_name: m-s-things-thing-d
+            zip_file: m-s-things-thing-d.zip          
+      - name: /things/{thing_id}/tags get lambda deploy zip
+        uses: kinlane/things@main
+        with:
+            args: zip -qq -r m-s-things-thing-tags-g.zip things/thing_id/tags/get/index.js node_modules
+      - name: things get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-west-1
+            function_name: m-s-things-thing-tags-g
+            zip_file: m-s-things-thing-tags-g.zip
+      - name: /things/{thing_id}/tags post lambda deploy zip
+        uses: kinlane/things@main
+        with:
+            args: zip -qq -r m-s-things-thing-tags-po.zip things/thing_id/tags/post/index.js node_modules
+      - name: things get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-west-1
+            function_name: m-s-things-thing-tags-po
+            zip_file: m-s-things-thing-tags-po.zip
+      - name: /things/{thing_id}/tags/{tag_id} delete lambda deploy zip
+        uses: kinlane/things@main
+        with:
+            args: zip -qq -r m-s-things-thing-tags-tag-d.zip things/thing_id/tags/tag_id/delete/index.js node_modules
+      - name: things get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-west-1
+            function_name: m-s-things-thing-tags-tag-d
+            zip_file: m-s-things-thing-tags-tag-d.zip            

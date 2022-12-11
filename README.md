@@ -1,2 +1,2 @@
-# things
-This is for managing all the things I am interested in.
+# Things
+These are the things that are important.
