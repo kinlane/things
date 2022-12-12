@@ -117,3 +117,15 @@ jobs:
             aws_region: us-east-1
             function_name: m-s-things-thing-tags-tag-d
             zip_file: m-s-things-thing-tags-tag-d.zip            
+      - name: /thingss/bookmarklet get lambda deploy zip
+        uses: kinlane/thingss@main
+        with:
+            args: zip -qq -r m-s-thingssbookmarklet-g.zip thingss/bookmarklet/get/index.js node_modules
+      - name: thingss get lambda deploy
+        uses: appleboy/lambda-action@master
+        with:
+            aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+            aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+            aws_region: us-east-1
+            function_name: m-s-thingssbookmarklet-g
+            zip_file: m-s-thingssbookmarklet-g.zip             
